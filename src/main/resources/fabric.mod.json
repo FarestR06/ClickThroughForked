@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "clickthrough",
+  "version": "1.0-SNAPSHOT",
+  "name": "ClickThroughForked",
+  "description": "Click through signs and item frames to chests and other containers! Mod originally made by Giselbaer",
+  "authors": [
+    "Giselbaer",
+    "FarestR06"
+  ],
+  "contact": {
+    "repo": "https://github.com/farestr06/ClickThroughForked"
+  },
+  "license": "MIT",
+  "icon": "assets/clickthrough/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "de.guntram.mcmod.clickthrough.ClickThrough"
+    ],
+    "modmenu": [
+      "de.guntram.mcmod.clickthrough.MMConfigurationHandler"
+    ]
+  },
+  "mixins": [
+    "clickthrough.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

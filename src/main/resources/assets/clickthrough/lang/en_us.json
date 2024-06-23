@@ -1,0 +1,6 @@
+{
+  "clickthrough.config.sneaktodye": "Sneak to Dye",
+  "clickthrough.config.tt.sneaktodye": "Wall signs can be interacted with while sneaking",
+  "clickthrough.config.onlycontainers": "Only Containers",
+  "clickthrough.config.tt.onlycontainers": "You may only click through a sign if it's on a container"
+}

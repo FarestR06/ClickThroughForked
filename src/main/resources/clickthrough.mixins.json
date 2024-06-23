@@ -1,0 +1,11 @@
+{
+    "required": true,
+    "package": "de.guntram.mcmod.clickthrough.mixins",
+    "minVersion": "0.6",
+    "client": [
+        "ItemUseMixin", "SneakingCancelsInteractionMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
