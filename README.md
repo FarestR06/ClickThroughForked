@@ -14,3 +14,6 @@ Yes, this mod (like the original) is that simple.
 
 ## Do you have permission?
 Like the original, this mod has the MIT License; I think I should be fine.
+
+## Known Issues
+- Configuration currently crashes the game
