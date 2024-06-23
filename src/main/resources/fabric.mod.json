@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "clickthrough",
-  "version": "1.0-SNAPSHOT",
+  "version": "1.0",
   "name": "ClickThroughForked",
   "description": "Click through signs and item frames to chests and other containers! Mod originally made by Giselbaer",
   "authors": [
