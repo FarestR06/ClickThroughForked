@@ -19,7 +19,7 @@
       "de.guntram.mcmod.clickthrough.ClickThrough"
     ],
     "modmenu": [
-      "de.guntram.mcmod.clickthrough.MMConfigurationHandler"
+      "de.guntram.mcmod.clickthrough.config.ClickThroughForkedConfigScreen"
     ]
   },
   "mixins": [
@@ -28,6 +28,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "1.21.x",
+    "yet_another_config_lib_v3": ">=3.5.0+1.21-fabric"
   }
 }

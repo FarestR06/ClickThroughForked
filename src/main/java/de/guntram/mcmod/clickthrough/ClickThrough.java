@@ -1,21 +1,16 @@
 package de.guntram.mcmod.clickthrough;
 
-import de.guntram.mcmod.fabrictools.ConfigurationProvider;
+import de.guntram.mcmod.clickthrough.config.ClickThroughForkedConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
-public class ClickThrough implements ClientModInitializer 
-{
-    static public final String MODID="clickthrough";
-    static public final String MODNAME="ClickThrough";
+public class ClickThrough implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ConfigurationHandler confHandler = ConfigurationHandler.getInstance();
-        ConfigurationProvider.register(MODNAME, confHandler);
-        confHandler.load(ConfigurationProvider.getSuggestedFile(MODID));
+        ClickThroughForkedConfig.HANDLER.instance().init();
     }
     
     static public boolean isDyeOnSign = false;

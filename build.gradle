@@ -25,6 +25,12 @@ repositories {
     maven {
         url = "https://minecraft.guntram.de/maven/"
     }
+    repositories {
+        maven {
+            name 'Xander Maven'
+            url 'https://maven.isxander.dev/releases'
+        }
+    }
 }
 
 dependencies {
@@ -39,8 +45,7 @@ dependencies {
     // Mod Menu
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation "de.guntram.mcmod:GBfabrictools:${project.gbfabrictools_version}"
-    include    "de.guntram.mcmod:GBfabrictools:${project.gbfabrictools_version}"
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 
 }
 

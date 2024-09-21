@@ -1,8 +1,10 @@
 package de.guntram.mcmod.clickthrough.mixins;
 
 import de.guntram.mcmod.clickthrough.ClickThrough;
-import de.guntram.mcmod.clickthrough.ConfigurationHandler;
+
 import java.util.regex.Pattern;
+
+import de.guntram.mcmod.clickthrough.config.ClickThroughForkedConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallBannerBlock;
@@ -15,6 +17,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.DyeItem;
+import net.minecraft.item.GlowInkSacItem;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -23,6 +26,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -39,8 +43,7 @@ public class ItemUseMixin {
     public void switchCrosshairTarget(CallbackInfo ci) {
         ClickThrough.isDyeOnSign = false;
         if (crosshairTarget != null) {
-            if (crosshairTarget.getType() == HitResult.Type.ENTITY && ((EntityHitResult)crosshairTarget).getEntity() instanceof ItemFrameEntity) {
-                ItemFrameEntity itemFrame = (ItemFrameEntity) ((EntityHitResult)crosshairTarget).getEntity();
+            if (crosshairTarget.getType() == HitResult.Type.ENTITY && ((EntityHitResult) crosshairTarget).getEntity() instanceof ItemFrameEntity itemFrame) {
                 // copied from AbstractDecorationEntity#canStayAttached
                 BlockPos attachedPos = itemFrame.getBlockPos().offset(itemFrame.getHorizontalFacing().getOpposite());
                 // System.out.println("Item frame attached to "+state.getBlock().getTranslationKey()+" at "+blockPos.toShortString());
@@ -52,7 +55,7 @@ public class ItemUseMixin {
                 BlockPos blockPos = ((BlockHitResult)crosshairTarget).getBlockPos();
                 BlockState state = world.getBlockState(blockPos);
                 Block block = state.getBlock();
-                if (block instanceof WallSignBlock sign) {
+                if (block instanceof WallSignBlock) {
                     BlockPos attachedPos = blockPos.offset(state.get(WallSignBlock.FACING).getOpposite());
                     if (!isClickableBlockAt(attachedPos)) {
                         return;
@@ -64,7 +67,7 @@ public class ItemUseMixin {
                     
                     for (int i=0; i<4; i++) {
                         Pattern pattern;
-                        if ((pattern = ConfigurationHandler.getIgnorePattern(i)) != null) {
+                        if ((pattern = ClickThroughForkedConfig.HANDLER.instance().compiledPatterns[i]) != null) {
                             String signText = ClickThrough.getSignRowText((SignBlockEntity) entity);
                             if (pattern.matcher(signText).matches()) {
                                 System.out.println("not clicking through because "+pattern+" matches "+signText);
@@ -73,8 +76,8 @@ public class ItemUseMixin {
                         }
                     }
 
-                    if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof DyeItem) {
-                        if (ConfigurationHandler.getSneakToDyeSigns()) {
+                    if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof DyeItem || player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof GlowInkSacItem) {
+                        if (ClickThroughForkedConfig.HANDLER.instance().sneakToDyeSigns) {
                             ClickThrough.isDyeOnSign = true;                // prevent sneaking from cancelling the interaction
                             if (player.isSneaking()) {
                                 // System.out.println("releasing shift");
@@ -83,9 +86,6 @@ public class ItemUseMixin {
                             } else {
                                 this.crosshairTarget = new BlockHitResult(crosshairTarget.getPos(), ((BlockHitResult)crosshairTarget).getSide(), attachedPos, false);
                             }
-                        } else {
-                            // Don't switch the target; default action of dyeing the sign itself
-                            return;
                         }
                     } else {
                         if (!player.isSneaking()) {
@@ -93,8 +93,7 @@ public class ItemUseMixin {
                         }
                     }
                 } else if (block instanceof WallBannerBlock) {
-                    WallBannerBlock banner  = (WallBannerBlock) block;
-                    BlockPos attachedPos = blockPos.offset(state.get(banner.FACING).getOpposite());
+                    BlockPos attachedPos = blockPos.offset(state.get(WallBannerBlock.FACING).getOpposite());
                     if (isClickableBlockAt(attachedPos)) {
                         this.crosshairTarget = new BlockHitResult(crosshairTarget.getPos(), ((BlockHitResult)crosshairTarget).getSide(), attachedPos, false);
                     }
@@ -103,12 +102,13 @@ public class ItemUseMixin {
         }
     }
     
+    @Unique
     private boolean isClickableBlockAt(BlockPos pos) {
-        if (!ConfigurationHandler.onlyToContainers()) {
+        if (!ClickThroughForkedConfig.HANDLER.instance().onlyToContainers) {
             return true;
         }
         BlockEntity entity = world.getBlockEntity(pos);
-        return (entity != null && entity instanceof LockableContainerBlockEntity);
+        return (entity instanceof LockableContainerBlockEntity);
     }
     
     @Inject(method="doItemUse", at=@At("RETURN"))

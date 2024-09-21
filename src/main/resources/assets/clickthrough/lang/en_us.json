@@ -1,4 +1,6 @@
 {
+  "clickthrough.config.title": "ClickThroughForked",
+  "clickthrough.config.category.general": "Basic Settings",
   "clickthrough.config.sneaktodye": "Sneak to Dye",
   "clickthrough.config.tt.sneaktodye": "Wall signs can be interacted with while sneaking",
   "clickthrough.config.onlycontainers": "Only Containers",
